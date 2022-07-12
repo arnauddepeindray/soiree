@@ -3,82 +3,31 @@ import 'package:flutter/material.dart';
 // My Own Imports
 import 'package:soiree/pages/category/top_offers.dart';
 
-class BestOfFashion extends StatelessWidget {
+class ListParty extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      // height: 500.0,
       child: Column(
         children: <Widget>[
-          TopImageBestFashion(),
-          OfferGridBestFashion(),
+          //Filters(),
+          ItemLists(),
         ],
       ),
     );
   }
 }
 
-class TopImageBestFashion extends StatelessWidget {
+class Filters extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children: <Widget>[
-        Image(
-          image: AssetImage('assets/top_design/best_of_fashion.jpg'),
-        ),
-        Positioned(
-          top: 40.0,
-          left: 20.0,
-          child: Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.all(0.0),
-            width: 320.0,
-            height: 50.0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'Best Of Fashion',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.0,
-                  ),
-                ),
-                InkWell(
-                  child: Container(
-                    padding: EdgeInsets.all(3.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5.0),
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 0.2,
-                      ),
-                    ),
-                    child: Text(
-                      'View All',
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              TopOffers(title: 'Best of Fashion')),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+      children: <Widget>[],
     );
   }
 }
 
-class OfferGridBestFashion extends StatelessWidget {
+class ItemLists extends StatelessWidget {
   final bestFashionList = [
     {
       'image': 'assets/best_of_fashion/best_of_fashion_1.jpg',
@@ -99,7 +48,36 @@ class OfferGridBestFashion extends StatelessWidget {
       'image': 'assets/best_of_fashion/best_of_fashion_4.jpg',
       'title': 'Nighties & Nightdresses',
       'offer': 'Starting at ₹399'
-    }
+    },
+    {
+      'image': 'assets/best_of_fashion/best_of_fashion_3.jpg',
+      'title': 'Quttos & X-Well',
+      'offer': 'Min. 50% Off'
+    },
+    {
+    'image': 'assets/best_of_fashion/best_of_fashion_3.jpg',
+    'title': 'Quttos & X-Well',
+    'offer': 'Min. 50% Off'
+    },
+
+    {
+    'image': 'assets/best_of_fashion/best_of_fashion_3.jpg',
+    'title': 'Quttos & X-Well',
+    'offer': 'Min. 50% Off'
+    },
+    {
+      'image': 'assets/best_of_fashion/best_of_fashion_3.jpg',
+      'title': 'Quttos & X-Well',
+      'offer': 'Min. 50% Off'
+    },
+
+    {
+      'image': 'assets/best_of_fashion/best_of_fashion_3.jpg',
+      'title': 'Quttos & X-Well',
+      'offer': 'Min. 50% Off'
+    },
+
+
   ];
 
   @override
@@ -164,7 +142,7 @@ class OfferGridBestFashion extends StatelessWidget {
       children: <Widget>[
         SizedBox(
           width: width,
-          height: 479.0,
+          height: MediaQuery.of(context).size.height,
           child: Stack(
             children: <Widget>[
               Container(

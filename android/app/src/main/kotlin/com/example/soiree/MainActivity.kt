@@ -1,4 +1,4 @@
-package com.example.go_kart
+package com.example.soiree
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -8,6 +8,7 @@ import 'package:soiree/pages/login.dart';
 import 'package:soiree/Animation/fadeIn.dart';
 import 'package:soiree/pages/validator/authentification.dart';
 import 'package:soiree/provider.dart';
+import 'package:soiree/utils/messageProvider.dart';
 import 'package:soiree/widget/dialog.dart';
 
 class ForgotPassword extends StatefulWidget {
@@ -23,7 +24,7 @@ class _ForgotPasswordState extends State<ForgotPassword>
   @override
   Widget build(BuildContext context) {
     final AuthService auth = Provider.of(context).auth;
-
+    final MessageProvider messageProvider = Provider.of(context).messageProvider;
     return Scaffold(
       body: ListView(
         children: <Widget>[
@@ -132,6 +133,7 @@ class _ForgotPasswordState extends State<ForgotPassword>
                           if (_formKey.currentState.validate()) {
                             try {
                               await auth.resetPassword(_emailController.text);
+                              messageProvider.createMessage("Erreur d'authentification", "Un email de réinitialisation de mot de passe a été envoyer");
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

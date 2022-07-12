@@ -19,8 +19,9 @@ class MainDrawer extends StatelessWidget {
     final AuthService auth = Provider.of(context).auth;
     GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+
     bool isConnected = auth.isConnected();
-    print(isConnected);
+
     // Logout AlertDialog Start Here
     void _showDialog() {
       // flutter defined function
@@ -60,6 +61,7 @@ class MainDrawer extends StatelessWidget {
                 onPressed: () async {
                   print("Start logout");
                   await auth.signOut();
+
                   Navigator.of(context).pop();
                   Navigator.pop(context);
                 },

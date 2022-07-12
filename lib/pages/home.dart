@@ -13,13 +13,20 @@ import 'package:soiree/pages/home_page_component/top_seller_grid.dart';
 import 'package:soiree/pages/home_page_component/best_deal.dart';
 import 'package:soiree/pages/home_page_component/featured_brands.dart';
 import 'package:soiree/pages/home_page_component/block_buster_deal.dart';
-import 'package:soiree/pages/home_page_component/best_of_fashion.dart';
+import 'package:soiree/pages/home_page_component/ListParty.dart';
 import 'package:soiree/pages/home_page_component/womens_collection.dart';
+import 'package:soiree/pages/login.dart';
 import 'package:soiree/pages/notifications.dart';
 import 'package:soiree/pages/category/top_offers.dart';
 import 'package:soiree/Animation/slide_left_rout.dart';
 import 'package:soiree/pages/cart.dart';
+import 'package:soiree/pages/party/add.dart';
 import 'package:soiree/pages/search.dart';
+import 'package:soiree/utils/messageProvider.dart';
+import 'package:soiree/widget/dialog.dart';
+
+import '../auth.dart';
+import '../provider.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -31,13 +38,22 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   DateTime currentBackPressTime;
 
+
+  //BAR EN TETE APPLICATION
   @override
   Widget build(BuildContext context) {
+
+    final AuthService auth = Provider.of(context).auth;
+    bool isConnected = auth.isConnected();
+
+    MessageProvider messageProvider = Provider.of(context).messageProvider;
+
+
     return Scaffold(
       backgroundColor: const Color(0xFFF1F3F6),
       appBar: AppBar(
         title: Text(
-          'GoKart',
+          'RAFPLES',
           style: TextStyle(
             fontFamily: 'Pacifico',
           ),
@@ -45,6 +61,23 @@ class _HomeState extends State<Home> {
         titleSpacing: 0.0,
         backgroundColor: Theme.of(context).primaryColor,
         actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            color: Colors.white,
+            onPressed: () {
+              if(isConnected){
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AddParty()));
+              }
+              else{
+                messageProvider.createMessage("Erreur d'authentification","Vous devez être connecter pour créer une soirée");
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Login()));
+
+              }
+
+            },
+          ),
           IconButton(
             icon: Icon(Icons.search),
             color: Colors.white,
@@ -98,109 +131,10 @@ class _HomeState extends State<Home> {
               height: 5.0,
             ),
 
-            // Category Grid Start Here
-            //CategoryGrid(),
-
-            // Category Grid End Here
-
-            // Best Offer Grid Start Here
-
-            BestOfferGrid(),
-
-            // Best Offer Grid End Here
-            SizedBox(
-              height: 4.0,
-            ),
-
-            Divider(
-              height: 1.0,
-            ),
-
-            SizedBox(
-              height: 4.2,
-            ),
-
-            // Top Seller Grid Start Here
-            TopSeller(),
-            // Top Seller Grid End Here
-
-            SizedBox(
-              height: 3.8,
-            ),
-
-            Divider(
-              height: 1.0,
-            ),
-
-            SizedBox(
-              height: 4.0,
-            ),
-
-            // Best Deal Grid Start Here
-            BestDealGrid(),
-            // Best Deal Grid End Here
-
-            SizedBox(
-              height: 3.8,
-            ),
-
-            Divider(
-              height: 1.0,
-            ),
-
-            SizedBox(
-              height: 8.0,
-            ),
-
-            SizedBox(
-              height: 6.0,
-            ),
-
-            Divider(
-              height: 1.0,
-            ),
-
-            SizedBox(
-              height: 6.0,
-            ),
-
-            // Block Buster Deals Start Here
-            BlockBusterDeals(),
-            // Block Buster Deals End Here
-
-            SizedBox(
-              height: 6.0,
-            ),
-
-            Divider(
-              height: 1.0,
-            ),
-
-            SizedBox(
-              height: 0.0,
-            ),
-
-            //Best of Fashion Start Here
-            BestOfFashion(),
+            //List party
+            ListParty(),
             //Best of Fashion End Here
 
-            SizedBox(
-              height: 6.0,
-            ),
-
-            Divider(
-              height: 1.0,
-            ),
-
-            SizedBox(
-              height: 0.0,
-            ),
-
-            // Womens Collection Start Here
-            WomensCollection(),
-            // Womens Collection End Here
-
-            SizedBox(height: 20.0),
           ],
         ),
         onWillPop: () async {

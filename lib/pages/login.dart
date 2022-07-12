@@ -11,7 +11,10 @@ import 'package:soiree/pages/forgot_password.dart';
 //My Own Imports
 import 'package:soiree/Animation/fadeIn.dart';
 import 'package:soiree/pages/validator/authentification.dart';
+import 'package:soiree/utils/messageProvider.dart';
 import 'package:soiree/widget/dialog.dart';
+
+import '../provider.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -41,6 +44,10 @@ class _LoginState extends State<Login> with InputAuthentification {
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration.zero, () async {
+      showMessage(context);
+    });
+
     return Scaffold(
       body: WillPopScope(
         child: ListView(
@@ -55,7 +62,7 @@ class _LoginState extends State<Login> with InputAuthentification {
                     Text(
                       "Connexion",
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Colors.white,
                         fontSize: 40.0,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Alatsi',
@@ -132,6 +139,7 @@ class _LoginState extends State<Login> with InputAuthentification {
                                         },
                                         controller: _emailLoginController,
                                         decoration: InputDecoration(
+                                          hintStyle: TextStyle(color: Colors.white),
                                           hintText: "Adresse email",
                                           contentPadding: const EdgeInsets.only(
                                               top: 12.0, bottom: 12.0),
@@ -153,6 +161,7 @@ class _LoginState extends State<Login> with InputAuthentification {
                                         controller: _passwordController,
                                         decoration: InputDecoration(
                                           hintText: 'Mot de passe',
+                                          hintStyle: TextStyle(color: Colors.white),
                                           suffixIcon: IconButton(
                                             icon: Icon(Icons.remove_red_eye),
                                             onPressed: _viewPassword,
@@ -175,7 +184,7 @@ class _LoginState extends State<Login> with InputAuthentification {
                                     child: Text(
                                       'Mot de passe oublié?',
                                       style: TextStyle(
-                                        color: Colors.grey[700],
+                                        color: Colors.white,
                                         fontFamily: 'Alatsi',
                                         fontSize: 15.0,
                                       ),
@@ -199,7 +208,7 @@ class _LoginState extends State<Login> with InputAuthentification {
                                     height: 45.0,
                                     child: Material(
                                       borderRadius: BorderRadius.circular(20.0),
-                                      shadowColor: Colors.grey[300],
+                                      shadowColor: Colors.white,
                                       color: Colors.white,
                                       borderOnForeground: false,
                                       elevation: 5.0,
@@ -235,8 +244,8 @@ class _LoginState extends State<Login> with InputAuthentification {
                                   ),
                                   onTap: () async {
                                     await _login();
-
-                                    if (_messageLogin != "" && !_isError) {
+                                    debugPrint(_messageLogin + " Erreur : " + _isError.toString());
+                                    if (_isError) {
                                       showAlertDialog(
                                           context,
                                           "Erreur d'authentification",
@@ -262,7 +271,7 @@ class _LoginState extends State<Login> with InputAuthentification {
                                     Text(
                                       'Compte existant ?',
                                       style: TextStyle(
-                                        color: Colors.grey[600],
+                                        color: Colors.white,
                                         fontSize: 15.0,
                                         fontFamily: 'Alatsi',
                                       ),
@@ -274,7 +283,7 @@ class _LoginState extends State<Login> with InputAuthentification {
                                       child: Text(
                                         'Inscription',
                                         style: TextStyle(
-                                          color: Colors.grey[700],
+                                          color: Colors.white,
                                           fontSize: 18.0,
                                           fontFamily: 'Alatsi',
                                           fontWeight: FontWeight.bold,
@@ -299,7 +308,7 @@ class _LoginState extends State<Login> with InputAuthentification {
                                 Text(
                                   "Continuer avec",
                                   style: TextStyle(
-                                    color: Colors.grey,
+                                    color: Colors.white,
                                     fontSize: 18.0,
                                     fontFamily: 'Alatsi',
                                     fontWeight: FontWeight.bold,
@@ -370,6 +379,7 @@ class _LoginState extends State<Login> with InputAuthentification {
           ],
         ),
         onWillPop: () async {
+
           bool backStatus = onWillPop();
           if (backStatus) {
             exit(0);
@@ -384,6 +394,13 @@ class _LoginState extends State<Login> with InputAuthentification {
     _emailLoginController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void showMessage(BuildContext context){
+    MessageProvider messageProvider = Provider.of(context).messageProvider;
+    if(messageProvider.needToLog){
+      showAlertDialog(context, messageProvider.getTitle(), messageProvider.getMessage());
+    }
   }
 
   Future<void> _login() async {

@@ -77,7 +77,7 @@ class _SignupState extends State<Signup>
                     'Inscription',
                     textAlign: TextAlign.end,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontSize: 40.0,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Alatsi',
@@ -128,6 +128,7 @@ class _SignupState extends State<Signup>
                             },
                             decoration: InputDecoration(
                               hintText: 'Adresse email',
+                              hintStyle: TextStyle(color: Colors.white),
                               contentPadding: const EdgeInsets.only(
                                   top: 12.0, bottom: 12.0),
                             ),
@@ -149,6 +150,7 @@ class _SignupState extends State<Signup>
                             },
                             decoration: InputDecoration(
                               hintText: "Nom d'utilisateur",
+                              hintStyle: TextStyle(color: Colors.white),
                               contentPadding: const EdgeInsets.only(
                                   top: 12.0, bottom: 12.0),
                             ),
@@ -178,6 +180,7 @@ class _SignupState extends State<Signup>
                             },
                             decoration: InputDecoration(
                               hintText: 'Mot de passe',
+                              hintStyle: TextStyle(color: Colors.white),
                               suffixIcon: IconButton(
                                 icon: Icon(Icons.remove_red_eye),
                                 onPressed: _viewPassword,
@@ -211,6 +214,7 @@ class _SignupState extends State<Signup>
                             },
                             decoration: InputDecoration(
                               hintText: 'Confirmation du mot de passe ',
+                              hintStyle: TextStyle(color: Colors.white),
                               suffixIcon: IconButton(
                                 icon: Icon(Icons.remove_red_eye),
                                 onPressed: _viewPassword1,
@@ -285,7 +289,7 @@ class _SignupState extends State<Signup>
                         Text(
                           'Compte existant?',
                           style: TextStyle(
-                            color: Colors.grey[600],
+                            color: Colors.white,
                             fontSize: 15.0,
                             fontFamily: 'Alatsi',
                           ),
@@ -297,7 +301,7 @@ class _SignupState extends State<Signup>
                           child: Text(
                             'Connexion',
                             style: TextStyle(
-                              color: Colors.grey[700],
+                              color: Colors.white,
                               fontSize: 18.0,
                               fontFamily: 'Alatsi',
                               fontWeight: FontWeight.bold,

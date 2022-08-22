@@ -19,6 +19,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+
   FirebaseAuth.instance.authStateChanges().listen((User user) {
     if (user == null) {
       print('User is currently signed out!');

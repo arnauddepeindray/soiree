@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -36,17 +38,23 @@ class AddPartyState extends State<AddParty> {
   final TextEditingController _street = TextEditingController();
   final TextEditingController _number_allow = TextEditingController();
   final TextEditingController _price = TextEditingController();
-
-
+  final db = FirebaseFirestore.instance;
   List<String> _fileUploaded = [];
   String _dateEn = "";
 
-  List<String> _prefTest = ["Fumeur", "Alcool"];
-  //List<String> _prefTest = ["Fumeur", "Alcool", "Vegetarien", "Uniquement homme", "Huniquement femme cochon"];
+  List<Map> _prefTest = [];
   List<String> _prefSelected = [];
+
+  String _idAdded;
+
 
   void dispose(){
     _dateController.dispose();
+    _title.dispose();
+    _description.dispose();
+    _street.dispose();
+    _number_allow.dispose();
+    _price.dispose();
     super.dispose();
   }
 
@@ -70,41 +78,131 @@ class AddPartyState extends State<AddParty> {
     });
   }
 
-  Future<String> _add(){
+  Future<void> getPref() async {
+      db.collection("preferences").get().then((event) {
+          List<Map> prefList = [];
+          for(var doc in event.docs){
+              Map<String, String> pref = {};
+              var entries = <String, String>{"id": doc.id, "name": doc.get("name")};
+              pref.addAll(entries);
+
+              prefList.add(pref);
+
+
+          }
+
+
+          setState(() {
+            _prefTest = prefList;
+          });
+
+
+      });
+  }
+
+  Future<void> _add() async{
+    List<Map> _prefsToAdd = [];
+    _prefSelected.forEach((pref) {
+      var entries = <String, dynamic>{"pref_party": pref};
+      _prefsToAdd.add(entries);
+     });
+
+    final party = <String, dynamic>{
+        "address": _street.text,
+        "date": _dateController.text,
+        "description": _description.text,
+        "number_people": _number_allow.text,
+        "title": _title.text,
+    };
+
+
+    db.collection("party")
+        .add(party)
+
+        .then((DocumentReference doc) {
+          _prefsToAdd.forEach((e) {
+            db.collection("party")
+                .doc(doc.id)
+                .collection("preferences")
+                .add(e);
+          });
+
+          int num = 0;
+          _fileUploaded.forEach((e) async {
+            Reference ref = FirebaseStorage.instance
+                .ref()
+                .child("party_images")
+                .child("party${num}-${doc.id}.jpg")
+            ;
+
+            final metadata = SettableMetadata(
+              contentType: 'image/jpeg',
+              customMetadata: {'picked-file-path': e}
+            );
+
+            ref.putData(await File(e).readAsBytes(), metadata);
+
+            db.collection("party")
+                .doc(doc.id)
+                .collection("images")
+                .add(<String, dynamic>{
+              "name": "party${num}-${doc.id}.jpg"
+            });
+
+
+            num++;
+          });
+
+          setState(() {
+            _idAdded = doc.id;
+          });
+
+
+        })
+    .onError((error, stackTrace) {
+      return;
+    }
+    );
+
+
+
+
+    
 
   }
 
-  List<Widget> _buildChoises(){
+  Future<List<Widget>> _buildChoises() async{
+    await getPref();
+    List<Widget> widgets =  _prefTest.map((pref) {
+      return  Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: FilterChip(
+              label: Text(pref["name"]),
 
-    print("start build");
+              selectedColor: Colors.blue,
+              selected: _prefSelected.contains(pref.values.first),
+              onSelected: (bool selected) {
 
+                if(selected){
+                  setState(() {
+                    _prefSelected.add(pref.values.first);
+                  });
+                }
+                else {
+                  setState(() {
+                    _prefSelected.remove(pref.values.first);
+                  });
+                }
+              }));
 
-   return _prefTest.map((e) =>  Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: FilterChip(
-            label: Text(e),
-
-            selectedColor: Colors.blue,
-            selected: _prefSelected.contains(e),
-            onSelected: (bool selected) {
-              if(selected){
-                setState(() {
-                  _prefSelected.add(e);
-                });
-              }
-              else {
-                setState(() {
-                  _prefSelected.remove(e);
-                });
-              }
-            }))).toList();
+      }).toList();
+    return widgets;
   }
 
 
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
@@ -381,13 +479,39 @@ class AddPartyState extends State<AddParty> {
                         height: 15,
                       ),
                       Container(
-                        child: Row(
-                          children: <Widget>[
-                            Wrap(
-                              children: _buildChoises(),
-                            )
-                          ],
-                        ),
+                        child: FutureBuilder<List<Widget>>(
+                          future: _buildChoises(),
+                          builder: (BuildContext context, AsyncSnapshot<List<Widget>> snapshot) {
+                            List<Widget> children;
+                            if(snapshot.hasData) {
+                              children = <Widget>[
+                                Flexible(child: Wrap(
+                                  direction: Axis.horizontal,
+                                  children: snapshot.data,
+                                ))
+                              ];
+                            }else if (snapshot.hasError){
+                              children = <Widget>[
+                                SizedBox(width: 0, height: 0)
+                              ];
+                            }
+                            else {
+                              children = <Widget>[
+                                SizedBox(width: 0, height: 0)
+                              ];
+                            }
+
+                            return Container(
+                              width: 350,
+                              child: Row(
+                                children: children
+                              )
+                            );
+                          },
+                        )
+
+
+
                       ),
 
 
@@ -433,7 +557,14 @@ class AddPartyState extends State<AddParty> {
                             ),
                           ),
                           onTap: () async {
-                            print("Form send");
+                            await _add();
+                                if(_idAdded != null){
+                                    print("added");
+                                }
+                                else{
+                                  print("error");
+                                }
+                            ;
                           },
                         ),
                       ),

@@ -13,7 +13,8 @@ import 'package:soiree/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+    Key key = UniqueKey();
+    await tester.pumpWidget(MyApp(key: key,));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

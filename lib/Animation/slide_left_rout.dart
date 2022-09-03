@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 class SlideLeftRoute extends PageRouteBuilder {
   final Widget page;
-  SlideLeftRoute({this.page})
+  SlideLeftRoute({required this.page})
       : super(
           pageBuilder: (
             BuildContext context,
@@ -27,7 +27,7 @@ class SlideLeftRoute extends PageRouteBuilder {
 
 class ExitLeftRout extends PageRouteBuilder {
   final Widget page;
-  ExitLeftRout({this.page})
+  ExitLeftRout({required this.page})
       : super(
           pageBuilder: (
             BuildContext context,

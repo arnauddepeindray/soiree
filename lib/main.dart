@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:soiree/auth.dart';
-import 'package:soiree/pages/home.dart';
+import 'package:soiree/pages/splash/splash_screen.dart';
 import 'package:soiree/provider.dart';
+import 'package:soiree/style/theme.dart';
 import 'package:soiree/utils/messageProvider.dart';
 import 'firebase_options.dart';
 import 'package:soiree/AppTheme/my_behaviour.dart';
-import 'package:soiree/pages/spashscreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,39 +20,33 @@ void main() async {
   );
 
 
-  FirebaseAuth.instance.authStateChanges().listen((User user) {
+  FirebaseAuth.instance.authStateChanges().listen((User? user) {
     if (user == null) {
       print('User is currently signed out!');
     } else {}
   });
-
-  runApp(MyApp());
+  Key key = UniqueKey();
+  runApp(MyApp(key: key,));
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({required Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Provider(
         auth: AuthService(),
         messageProvider: MessageProvider(),
+        key: key!,
         child: MaterialApp(
           title: 'RAFPLES',
-          builder: (context, child) {
+          builder: (context,  child) {
             return ScrollConfiguration(
               behavior: MyBehavior(),
-              child: child,
+              child: child!,
             );
           },
-          theme: ThemeData(
-            scaffoldBackgroundColor: const Color(0xFF8A2BE2),
-            primarySwatch: Colors.blue,
-            primaryColor: const Color(0xFF2874F0),
-            accentColor: Colors.blueAccent,
-            primaryColorLight: const Color(0xFFFDE400),
-            textSelectionTheme: TextSelectionThemeData(
-              cursorColor: Colors.white,
-            ),
-          ),
+          theme: ThemeApp.getTheme(),
           home: MyHomePage(),
           debugShowCheckedModeBanner: false,
         ));

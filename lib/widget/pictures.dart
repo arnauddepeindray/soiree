@@ -1,12 +1,13 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:soiree/style/colors.dart';
 
 
 class TakePicture extends StatefulWidget {
 
 
-  const TakePicture({Key key, this.camera, this.addHandler}) : super(key: key);
+  const TakePicture({super.key, required this.camera, this.addHandler}) ;
   final CameraDescription camera;
   final addHandler;
 
@@ -20,9 +21,9 @@ class TakePicture extends StatefulWidget {
 }
 
 class TakePictureState extends State<TakePicture> {
-  CameraController _controller;
-  Future<void> _initializeControllerFuture;
-  XFile _image;
+  CameraController? _controller;
+  Future<void>? _initializeControllerFuture;
+  XFile? _image;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class TakePictureState extends State<TakePicture> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 // If the Future is complete, display the preview.
-                return CameraPreview(_controller);
+                return CameraPreview(_controller!);
               } else {
                 // Otherwise, display a loading indicator.
                 return Container(width: 0, height: 0);
@@ -41,6 +42,7 @@ class TakePictureState extends State<TakePicture> {
             },
           ),
           FloatingActionButton(
+            backgroundColor: primaryColor,
             // Provide an onPressed callback.
             onPressed: () async {
               // Take the Picture in a try / catch block. If anything goes wrong,
@@ -51,7 +53,7 @@ class TakePictureState extends State<TakePicture> {
 
                 // Attempt to take a picture and get the file `image`
                 // where it was saved.
-                final image = await _controller.takePicture();
+                final image = await _controller?.takePicture();
                 widget.addHandler(image);
 
               } catch (e) {

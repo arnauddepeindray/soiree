@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       vsync: this, duration: const Duration(milliseconds: 600));
   final db = FirebaseFirestore.instance;
   List<Categories> categoriesList = [];
-  List<Party> eventList = [];
+  List<String> eventList = [];
 
   void _getCategories () async{
     db.collection("preferences").get().then((event) {

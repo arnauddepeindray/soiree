@@ -53,7 +53,7 @@ dependencies:
   modal_bottom_sheet: ^3.0.0-pre
   pin_code_text_field: ^1.8.0
   package_info_plus: ^1.4.2
-  introduction_screen: ^3.0.2
+  introduction_screen: ^3.1.7
   simple_gesture_detector: ^0.2.0
 
 dev_dependencies:

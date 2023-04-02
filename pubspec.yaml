@@ -50,7 +50,7 @@ dependencies:
   google_fonts: ^3.0.1
   url_launcher: ^6.1.5
   qr_flutter: ^4.0.0
-  modal_bottom_sheet: ^2.1.0
+  modal_bottom_sheet: ^2.1.2
   pin_code_text_field: ^1.8.0
   package_info_plus: ^1.4.2
   introduction_screen: ^3.0.2

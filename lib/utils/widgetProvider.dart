@@ -5,7 +5,7 @@ import 'package:soiree/pages/login/login_screen.dart';
 import 'package:soiree/utils/messageProvider.dart';
 
 import '../Animation/slide_right_route.dart';
-import '../pages/event/add.dart';
+import '../pages/event/addParty/add.dart';
 import '../provider.dart';
 import '../style/colors.dart';
 

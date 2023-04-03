@@ -13,14 +13,14 @@ import 'package:soiree/pages/event/event_added_screen.dart';
 import 'package:soiree/utils/extension.dart';
 import 'package:soiree/widget/carousel.dart';
 
-import '../../Animation/slide_right_route.dart';
-import '../../style/colors.dart';
-import '../../style/dimens.dart';
-import '../../utils/extension_widget.dart';
-import '../../utils/pathProvider.dart';
-import '../../widget/button_widget.dart';
-import '../../widget/pictures.dart';
-import '../../widget/text_form_widget.dart';
+import '../../../Animation/slide_right_route.dart';
+import '../../../style/colors.dart';
+import '../../../style/dimens.dart';
+import '../../../utils/extension_widget.dart';
+import '../../../utils/pathProvider.dart';
+import '../../../widget/button_widget.dart';
+import '../../../widget/pictures.dart';
+import '../../../widget/text_form_widget.dart';
 
 class AddParty extends StatefulWidget {
   final String title = "Ajouter un évènement";

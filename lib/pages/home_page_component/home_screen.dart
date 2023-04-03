@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:soiree/data/category.dart';
 import 'package:soiree/data/party.dart';
 import 'package:soiree/pages/drawer/drawer.dart';
-import 'package:soiree/pages/event/add.dart';
+import 'package:soiree/pages/event/addParty/add.dart';
 import 'package:soiree/utils/extension.dart';
 import 'package:soiree/utils/widgetProvider.dart';
 

@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> with InputAuthentification {
   String _messageLogin = "";
   bool _isError = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  bool passwordVisible = false;
 
 
   @override
@@ -167,8 +167,23 @@ class _LoginScreenState extends State<LoginScreen> with InputAuthentification {
                     Text("Mot de passe", style: smallNormalTextStyle)
                         .addMarginLeft(spacingContainer),
                     TextFormWidget(
+                        maxLines: 1,
+                        obscureText: passwordVisible,
+                        textInputType: TextInputType.visiblePassword,
                         textEditingController: passwordController,
                         hintText: "Entrer votre mot de passe",
+                        iconButton: IconButton(
+                          icon: Icon(passwordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setState(
+                                  () {
+                                passwordVisible = !passwordVisible;
+                              },
+                            );
+                          },
+                        ),
                         onValidation: (value) {
                           if (!isInputLength(value!, 1)) {
                             return "Le mot de passe est requis";

@@ -41,7 +41,8 @@ class _RegisterScreenState extends State<RegisterScreen> with InputPasswordConfi
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _messageRegister = "";
-
+  bool passwordVisible = true;
+  bool passwordConfirmVisible = true;
   @override
   void initState() {
     super.initState();
@@ -147,7 +148,24 @@ class _RegisterScreenState extends State<RegisterScreen> with InputPasswordConfi
                     const SizedBox(height: spacingContainer),
                     Text("Mot de passe", style: smallNormalTextStyle)
                         .addMarginLeft(spacingContainer),
-                    TextFormWidget(hintText: "Entrer votre mot de passe", textEditingController: _passwordController, onValidation: (value) {
+                    TextFormWidget(
+                      hintText: "Entrer votre mot de passe",
+                      obscureText: passwordVisible,
+                      maxLines: 1,
+                      iconButton: IconButton(
+                        icon: Icon(passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off),
+                        onPressed: () {
+                          setState(
+                                () {
+                              passwordVisible = !passwordVisible;
+                            },
+                          );
+                        },
+                      ),
+                      textEditingController: _passwordController,
+                      onValidation: (value) {
                       if (!isInputLength(value!, 6)) {
                         return "Le mot de passe doit avoir minimum 6 caractères \n ";
                       }
@@ -165,18 +183,35 @@ class _RegisterScreenState extends State<RegisterScreen> with InputPasswordConfi
                     const SizedBox(height: spacingContainer),
                     Text("Confirmation du mot de passe", style: smallNormalTextStyle)
                         .addMarginLeft(spacingContainer),
-                    TextFormWidget(hintText: "Entrer la confirmation de votre mot de passe", onValidation: (value) {
-                      if (!isInputLength(value!, 6)) {
-                        return "Le mot de passe doit avoir minimum 6 caractères";
-                      }
+                    TextFormWidget(
+                        hintText: "Entrer la confirmation de votre mot de passe",
+                        maxLines: 1,
+                        obscureText: passwordConfirmVisible,
+                        iconButton: IconButton(
+                          icon: Icon(passwordConfirmVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setState(
+                                  () {
+                                    passwordConfirmVisible = !passwordConfirmVisible;
+                              },
+                            );
+                          },
+                        ),
+                        onValidation: (value) {
+                          if (!isInputLength(value!, 6)) {
+                            return "Le mot de passe doit avoir minimum 6 caractères";
+                          }
 
-                      if (!isConfirmationEquals(
-                          value, _passwordController.text)) {
-                        return "Les mots de passe ne sont pas identiques";
-                      }
+                          if (!isConfirmationEquals(
+                              value, _passwordController.text)) {
+                            return "Les mots de passe ne sont pas identiques";
+                          }
 
-                      return null;
-                    }),
+                          return null;
+                        }
+                    ),
                     const SizedBox(height: spacingContainer),
                     Row(
                       children: [

@@ -20,6 +20,8 @@ class TextFormWidget extends StatelessWidget {
   final bool? readOnly;
   final TextInputType? textInputType;
   final List<TextInputFormatter>? textInputFormatter;
+  final bool? obscureText;
+  final IconButton? iconButton;
 
   const TextFormWidget(
       {Key? key,
@@ -36,7 +38,10 @@ class TextFormWidget extends StatelessWidget {
       this.textInputFormatter,
       this.fillColor,
       this.style,
-      this.errorColor})
+      this.errorColor,
+      this.obscureText,
+      this.iconButton,
+      })
       : super(key: key);
 
   @override
@@ -53,6 +58,7 @@ class TextFormWidget extends StatelessWidget {
         readOnly: false,
         maxLines: maxLines,
         enabled: readOnly != null ? readOnly! : true,
+        obscureText: obscureText != null ? obscureText! : false,
         cursorColor: primaryColor,
         validator: onValidation != null ? (value) => onValidation!(value) : null,
         onSaved: onSaved != null ? onSaved!() : null,
@@ -70,6 +76,7 @@ class TextFormWidget extends StatelessWidget {
           hintText: hintText,
           hintStyle: hintTextStyle,
           errorStyle: errorTextStyle.copyWith(color: errorColor ?? errorColor),
+          suffixIcon: iconButton,
           contentPadding:
               const EdgeInsets.only(left: 14.0, bottom: 10.0, top: 10.0),
           focusedBorder: OutlineInputBorder(

@@ -7,13 +7,17 @@ import 'package:intl/intl.dart';
 import 'package:soiree/widget/text_form_widget.dart';
 
 class Step3 extends StatefulWidget {
-  final String title = "Informations de vôtre événement";
-  final int? currentStep;
+  final GlobalKey<FormState>? formKey;
+  final TextEditingController price;
+  final Function onSave;
+
   final FirebaseFirestore? db;
-  const Step3({
-    this.currentStep,
-    this.db,
-    super.key});
+  const Step3(
+      {this.formKey,
+      required this.price,
+      required this.onSave,
+      this.db,
+      super.key});
 
   @override
   Step3State createState() {
@@ -22,19 +26,8 @@ class Step3 extends StatefulWidget {
 }
 
 class Step3State extends State<Step3> {
-
-  final TextEditingController _price = TextEditingController();
-  String _dateEn = "";
-  final int step = 3;
-
   List<Map> _prefTest = [];
   List<String> _prefSelected = [];
-
-  void dispose() {
-    _price.dispose();
-
-    super.dispose();
-  }
 
   Future<void> getPref() async {
     widget.db?.collection("preferences").get().then((event) {
@@ -71,6 +64,7 @@ class Step3State extends State<Step3> {
                   setState(() {
                     _prefSelected.remove(pref.values.first);
                   });
+                  widget.onSave(_prefSelected);
                 }
               }));
     }).toList();
@@ -79,48 +73,43 @@ class Step3State extends State<Step3> {
 
   @override
   Widget build(BuildContext context) {
-
-    return step == widget.currentStep ? Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          TextFormWidget(
-            hintText: "Prix par personne",
-            textInputType: TextInputType.number,
-          ),
-          SizedBox(
-            height: 15.0,
-          ),
-          Container(
-              child: FutureBuilder<List<Widget>>(
+    return Form(
+        key: widget.formKey,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextFormWidget(
+                hintText: "Prix par personne",
+                textInputType: TextInputType.number,
+                textEditingController: widget.price,
+              ),
+              SizedBox(
+                height: 15.0,
+              ),
+              Container(
+                  child: FutureBuilder<List<Widget>>(
                 future: _buildChoises(),
                 builder: (BuildContext context,
-                    AsyncSnapshot<List<Widget>>
-                    snapshot) {
+                    AsyncSnapshot<List<Widget>> snapshot) {
                   List<Widget> children;
                   if (snapshot.hasData) {
                     List<Widget>? data = snapshot.data;
                     children = <Widget>[
                       Flexible(
                           child: Wrap(
-                            direction: Axis.horizontal,
-                            children: data!,
-                          ))
+                        direction: Axis.horizontal,
+                        children: data!,
+                      ))
                     ];
                   } else if (snapshot.hasError) {
-                    children = <Widget>[
-                      SizedBox(width: 0, height: 0)
-                    ];
+                    children = <Widget>[SizedBox(width: 0, height: 0)];
                   } else {
-                    children = <Widget>[
-                      SizedBox(width: 0, height: 0)
-                    ];
+                    children = <Widget>[SizedBox(width: 0, height: 0)];
                   }
 
-                  return Container(
-                      width: 350,
-                      child: Row(children: children));
+                  return Container(width: 350, child: Row(children: children));
                 },
               ))
-        ]) : Ink();
+            ]));
   }
 }

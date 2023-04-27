@@ -14,10 +14,10 @@ import '../../../widget/carousel.dart';
 import 'add.dart';
 
 class Step4 extends StatefulWidget {
-  final String title = "Ajouter des photos";
-  final int? currentStep;
+  final GlobalKey<FormState>? formKey;
+  final Function onSave;
 
-  const Step4({this.currentStep, super.key});
+  const Step4({this.formKey, required this.onSave, super.key});
 
   @override
   Step4State createState() {
@@ -26,9 +26,6 @@ class Step4 extends StatefulWidget {
 }
 
 class Step4State extends State<Step4> {
-  String _dateEn = "";
-  final int step = 4;
-
   List<String> _fileUploaded = [];
   final GlobalKey<AddPartyState> _key = GlobalKey();
 
@@ -41,12 +38,14 @@ class Step4State extends State<Step4> {
     setState(() {
       _fileUploaded.remove(path);
     });
+    widget.onSave(_fileUploaded);
   }
 
   void addImage(XFile image) {
     setState(() {
       _fileUploaded.add(image.path);
     });
+    widget.onSave(_fileUploaded);
   }
 
   void dispose() {
@@ -55,9 +54,11 @@ class Step4State extends State<Step4> {
 
   @override
   Widget build(BuildContext context) {
-    return step == widget.currentStep
-        ? Column(mainAxisAlignment: MainAxisAlignment.center, children:
-        <Widget>[
+    return Form(
+      key: widget.formKey,
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
             _fileUploaded.isNotEmpty
                 ? Carousel(
                     key: _key,
@@ -70,78 +71,64 @@ class Step4State extends State<Step4> {
                         return widg!;
                       },
                     ))
-                : SizedBox(height: 40),
+                : SizedBox(height: 0),
             Container(
-                alignment: Alignment.centerLeft,
-                child: Row(
-                  children: <Widget>[
-                    SizedBox(
-                        width: 200,
-                        height: 55,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: primaryColor,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                          ),
-                          onPressed: () async {
-                            FilePickerResult? result = await FilePicker.platform
-                                .pickFiles(
-                                    type: FileType.custom,
-                                    allowMultiple: true,
-                                    allowedExtensions: ['jpg', 'pdf', 'png']);
+                alignment: Alignment.center,
+                child: Flexible(
+                  child: Wrap(
+                    direction: Axis.horizontal,
+                    children: <Widget>[
+                      FloatingActionButton(
+                        backgroundColor: primaryColor,
+                        onPressed: () async {
+                          FilePickerResult? result = await FilePicker.platform
+                              .pickFiles(
+                                  type: FileType.custom,
+                                  allowMultiple: true,
+                                  allowedExtensions: ['jpg', 'pdf', 'png']);
 
-                            //SI image importé
-                            if (result != null) {
-                              setState(() {
-                                if (_fileUploaded == null) {
-                                  _fileUploaded = [];
-                                }
-                                _fileUploaded.addAll(
-                                    result.files.map((e) => e.path.toString()));
-                              });
-                            }
-                          },
-                          child: Row(
-                            children: <Widget>[
-                              Icon(
-                                Icons.add,
-                                color: Colors.white,
-                              ),
-                              Text(
-                                "Ajouter des images",
-                                style: TextStyle(
-                                  fontFamily: 'Alatsi',
-                                  color: Colors.white,
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )),
-                    SizedBox(width: 8),
-                    FutureBuilder(
-                      builder: (ctx, AsyncSnapshot snapshot) {
-                        if (snapshot.hasData) {
-                          // Displaying LoadingSpinner to indicate waiting state
-                          return TakePicture(
-                            camera: snapshot.data,
-                            key: _key,
-                            addHandler: addImage,
-                          );
-                        } else {
-                          return Container(width: 0, height: 0);
-                        }
-                      },
+                          //SI image importé
+                          if (result != null) {
+                            setState(() {
+                              if (_fileUploaded == null) {
+                                _fileUploaded = [];
+                              }
+                              _fileUploaded.addAll(
+                                  result.files.map((e) => e.path.toString()));
+                            });
+                          }
+                        },
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 8,
+                        height: 65,
+                      ),
+                      FutureBuilder(
+                        builder: (ctx, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            // Displaying LoadingSpinner to indicate waiting state
+                            return TakePicture(
+                              camera: snapshot.data,
+                              key: _key,
+                              addHandler: addImage,
+                            );
+                          } else {
+                            return Container(width: 0, height: 0);
+                          }
+                        },
 
-                      // Future that needs to be resolved
-                      // inorder to display something on the Canvas
-                      future: getCamera(),
-                    ),
-                  ],
+                        // Future that needs to be resolved
+                        // inorder to display something on the Canvas
+                        future: getCamera(),
+                      ),
+                    ],
+                  ),
                 ))
-          ])
-        : Ink();
+          ]),
+    );
   }
 }
